@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solo AI by Iyanda Solomon Ayobami</title>
+<style>
+body{font-family:Arial;background:#0f0f0f;color:#fff;margin:0;padding:15px}
+h2{color:#f5c518;text-align:center}
+#chat{height:60vh;overflow-y:auto;background:#1a1a1a;padding:12px;border-radius:12px}
+.msg{margin:8px 0;padding:10px;border-radius:10px;max-width:85%}
+.user{background:#f5c518;color:#000;margin-left:auto}
+.ai{background:#2a2a2a}
+input{width:75%;padding:12px;border-radius:20px;border:none}
+button{padding:12px 18px;border:none;border-radius:20px;background:#f5c518;font-weight:bold}
+</style>
+</head>
+<body>
+<h2>⚡ Solo AI</h2>
+<p style="text-align:center;font-size:13px">Created by Iyanda Solomon Ayobami | Iyanda Farms</p>
+<div id="chat"></div>
+<br>
+<input id="q" placeholder="Ask Solo AI anything...">
+<button onclick="ask()">Send</button>
+
+<script>
+// --- PASTE YOUR KEYS HERE ---
+const GEMINI_KEY = "AQ.Ab8RN6J3HDJyZYQR-scWLxLJoAkKKi2vxNzum22I8s0tS5EtPQ";
+const SUPABASE_URL = "Https://ihkzewwjblwxykobqssb.supabase.com";
+const SUPABASE_KEY = "sb_publishable_i1m1JHd2fIuNg4eHcZDLTQ_mzDP4dXa";
+
+async function ask(){
+  let q = document.getElementById("q").value.trim();
+  if(!q) return;
+  let chat = document.getElementById("chat");
+  chat.innerHTML += `<div class="msg user">${q}</div>`;
+  document.getElementById("q").value = "";
+  chat.innerHTML += `<div class="msg ai" id="thinking">Thinking...</div>`;
+  chat.scrollTop = chat.scrollHeight;
+
+  try{
+    let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-goog-api-key": GEMINI_KEY},
+      body: JSON.stringify({
+        systemInstruction:{parts:[{text:"You are Solo AI, a helpful AI assistant created by Iyanda Solomon Ayobami, founder of Iyanda Farms in Lagos, Nigeria. You are loyal, smart, simple and speak clearly. You help with farming, business, school, and daily life. Always identify as Solo AI when asked who created you. Never say you are Gemini."}]},
+        contents:[{parts:[{text:q}]}]
+      })
+    });
+    let data = await res.json();
+    let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, error: "+JSON.stringify(data).slice(0,300);
+    document.getElementById("thinking").id = "";
+    document.querySelector("#chat .ai:last-child").innerText = reply;
+    // Save to Supabase memory
+    try{
+      await fetch(`${SUPABASE_URL}/rest/v1/chats`,{
+        method:"POST",
+        headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+        body: JSON.stringify({question:q, answer:reply})
+      });
+    }catch(e){}
+  }catch(e){
+    document.getElementById("thinking").innerText = "Error: "+e.message;
+  }
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+</body>
+</html>
