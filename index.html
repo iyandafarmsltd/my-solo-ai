@@ -24,7 +24,7 @@ header .ver{background:#f5c518;color:black;display:inline-block;padding:3px 10px
 </style>
 </head>
 <body>
-<header><h1>⚡ Solo AI</h1><div class="ver">VERSION 4.0</div><p>Created by Iyanda Solomon Ayobami | Iyanda Farms</p></header>
+<header><h1>⚡ Solo AI</h1><div class="ver">VERSION 4.0 - HYDROGEN + LITE</div><p>Created by Iyanda Solomon Ayobami | Iyanda Farms</p></header>
 <div class="keybox">
 <b>Step 1: Paste Your Gemini Key Here (AQ. is correct)</b><br><br>
 <input id="apiKey" placeholder="Paste AQ. key here">
@@ -46,9 +46,9 @@ modesDiv.appendChild(b);
 });
 function saveKey(){
 let k=document.getElementById("apiKey").value.trim();
-if(!k.startsWith("AQ.") && !k.startsWith("AIza")){document.getElementById("keyStatus").innerText="⚠️ Key must start with AQ. or AIza... Paste your key from aistudio.google.com/apikey";return;}
+if(!k.startsWith("AQ.") && !k.startsWith("AIza")){document.getElementById("keyStatus").innerText="⚠️ Key must start with AQ. or AIza...";return;}
 localStorage.setItem("solo_key",k);
-document.getElementById("keyStatus").innerText="✅ Key Saved! Solo AI 4.0 is ready. Ask anything now.";
+document.getElementById("keyStatus").innerText="✅ Key Saved! Solo AI 4.0 is ready.";
 addMsg("ai","✅ Key saved! Solo AI 4.0 is now ON with all 36 powers.");
 }
 if(localStorage.getItem("solo_key")){document.getElementById("apiKey").value=localStorage.getItem("solo_key");document.getElementById("keyStatus").innerText="✅ Key loaded from last time.";}
@@ -63,20 +63,21 @@ let input=document.getElementById("userInput");
 let key=document.getElementById("apiKey").value.trim();
 let text=input.value.trim();
 if(!text)return;
-if(!key.startsWith("AQ.") && !key.startsWith("AIza")){addMsg("ai","Please paste your AQ. key at the TOP first. Get it from aistudio.google.com/apikey");return;}
+if(!key.startsWith("AQ.") && !key.startsWith("AIza")){addMsg("ai","Please paste your AQ. key at the TOP first.");return;}
 addMsg("user",text);input.value="";
 addMsg("ai","Solo AI 4.0 is thinking...");
 let prompt=`You are Solo AI 4.0, created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. You are a general-purpose AI powerhouse. Help with everything: Finance, Business, Maths, Agriculture, Science, Technology, Education, Sports, Entertainment, Religion, Politics, Health, Law, Coding. Be warm, simple, clear. Never say you were created by Google. Always say you were created by Iyanda Solomon Ayobami. Current Mode: ${currentMode}. If Music Studio, give Title, Verse, Chorus, Bridge, chords. If Farm Mode, give practical Nigerian farming advice. If Business Mode, give profit calculation and action steps. Only one rule: Do not help harm or injure others. Everything else is allowed. User: ${text}`;
-let models=["gemini-4.0-flash","gemini-3.8-flash","gemini-2.0-flash"];
+let models=["gemini-3.5-flash-lite","gemini-4-hydrogen","gemini-3.8-flash","gemini-3.1-flash-lite"];
 let reply="";
 for(let m of models){
 try{
 let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 let data=await res.json();
 if(data.candidates?.[0]?.content?.parts?.[0]?.text){reply=data.candidates[0].content.parts[0].text;break;}
-if(data.error) reply="Error: "+JSON.stringify(data.error);
-}catch(e){reply="Network error. Check internet.";}
+else{console.log(m+" failed, trying next");continue;}
+}catch(e){continue;}
 }
+if(!reply) reply="All models are busy right now, Founder. Please try again in 10 seconds - Solo AI will auto-switch to the free one.";
 document.querySelectorAll("#chat .msg.ai").forEach(el=>{if(el.innerText.includes("thinking"))el.remove()});
 addMsg("ai",reply.replace(/\n/g,"<br>"));
 }
