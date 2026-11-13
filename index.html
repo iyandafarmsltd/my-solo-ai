@@ -1,10 +1,10 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Solo AI 6.1 - Iyanda Farms</title>
+<title>Solo AI 6.2</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial;background:#0b0b12;color:#fff}
-header{padding:14px;text-align:center;background:#000;position:sticky;top:0;z-index:20}
+header{padding:14px;text-align:center;background:#000}
 header b{font-size:20px;color:#FFD700}
-#err{background:#ff0000;color:#fff;padding:10px;display:none;font-size:12px;white-space:pre-wrap}
+#err{background:red;color:#fff;padding:10px;display:none;white-space:pre-wrap}
 #keyBox{padding:14px;text-align:center;background:#16161f}
 #keyBox input{width:100%;padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#fff;margin-bottom:8px}
 button{border:none;border-radius:10px;padding:11px 14px;background:#FFD700;color:#000;font-weight:bold;cursor:pointer}
@@ -20,144 +20,160 @@ button{border:none;border-radius:10px;padding:11px 14px;background:#FFD700;color
 .user{background:#FFD700;color:#000;font-weight:bold}
 #debug{margin:10px;padding:10px;border-radius:10px;background:#2a0000;color:#ffaaaa;font-size:12px;display:none;white-space:pre-wrap}
 #inputBar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;align-items:flex-end;padding:10px;background:#111;z-index:30}
-#userInput{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;resize:none;min-height:44px;max-height:140px;font-family:Arial}
+#userInput{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;resize:none;min-height:44px;font-family:Arial}
 #loader{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:99}
 .windmill{font-size:70px;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 #floatBtns{position:fixed;right:12px;bottom:100px;display:flex;flex-direction:column;gap:10px;z-index:40}
-.float{width:52px;height:52px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;border:none}
+.float{width:52px;height:52px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center}
 #transBox{position:fixed;left:10px;right:10px;bottom:88px;background:#1e1e2e;padding:10px;border-radius:12px;display:none;z-index:41}
 #transBox select{width:100%;padding:10px;border-radius:8px;background:#000;color:#fff;margin-bottom:6px}
 .hidden{display:none!important}
 </style></head><body>
-<header><b>SOLO AI 6.1 FIX</b><p style="font-size:12px;opacity:.8;margin:4px 0">Iyanda Farms Ecosystem • 36 Powers</p><p id="status" style="color:#7CFC00;font-size:12px">Ready - Paste Key Once</p></header>
+<header><b>SOLO AI 6.2 FIX</b><p style="font-size:12px;opacity:.8;margin:4px 0">Iyanda Farms Ecosystem - 36 Powers</p><p id="status" style="color:#7CFC00;font-size:12px">Ready - Paste Key Once</p></header>
 <div id="err"></div>
-<div id="keyBox"><input id="apiKey" placeholder="Paste NEW key here"><button onclick="saveKey()" style="width:100%">Save & Lock New Key</button><button onclick="testKey()" style="width:100%;background:#00d4ff;margin-top:6px">Test Key Now</button><div id="keyResult" style="font-size:12px;margin-top:6px"></div></div>
-<div id="home"><div class="hero"><h1>Welcome Founder 👋</h1><p>Iyanda Solomon Ayobami</p><p>👇 TAP ANY CARD - NO TYPING HERE</p></div><div id="grid" class="grid"></div><div style="text-align:center;padding:20px;opacity:.6;font-size:12px">Solo AI 6.1 • Created by Iyanda Solomon Ayobami</div></div>
-<div id="chatPage"><div id="topBar"><button onclick="showHome()">← Menu</button><b id="chatTitle">Super Chat</b></div><div id="debug"></div><div id="chat"></div><div id="transBox"><select id="lang"><option>Yoruba</option><option>Hausa</option><option>Igbo</option><option>French</option><option>Spanish</option><option>English</option><option>Pidgin English</option></select><button onclick="doTranslate()" style="width:100%">Translate Last Answer</button><div id="transResult" style="margin-top:8px;font-size:13px"></div></div></div>
-<div id="inputBar" class="hidden"><textarea id="userInput" rows="1" placeholder="💬 TYPE CHAT HERE ONLY..."></textarea><button onclick="ask()">Send</button></div>
-<div id="floatBtns" class="hidden"><button class="float" style="background:#ff4d8d" onclick="toggleTranslate()">🌐</button><button class="float" style="background:#00d4ff" onclick="speakLast()">🔊</button><button class="float" id="micBtn" style="background:#2ecc71" onclick="startVoice()">🎤</button></div>
-<div id="loader"><div class="windmill">🌀</div><p>Loading Power... 1.5s</p></div>
+<div id="keyBox"><input id="apiKey" placeholder="Paste NEW key here"><button id="saveBtn" style="width:100%">Save and Lock New Key</button><button id="testBtn" style="width:100%;background:#00d4ff;margin-top:6px">Test Key Now</button><div id="keyResult" style="font-size:12px;margin-top:6px"></div></div>
+<div id="home"><div class="hero"><h1>Welcome Founder</h1><p>Iyanda Solomon Ayobami</p><p>TAP ANY CARD - NO TYPING HERE</p></div><div id="grid" class="grid"></div><div style="text-align:center;padding:20px;opacity:.6;font-size:12px">Solo AI 6.2 - Created by Iyanda Solomon Ayobami</div></div>
+<div id="chatPage"><div id="topBar"><button id="backBtn">Menu</button><b id="chatTitle">Super Chat</b></div><div id="debug"></div><div id="chat"></div><div id="transBox"><select id="lang"><option>Yoruba</option><option>Hausa</option><option>Igbo</option><option>French</option><option>Spanish</option><option>English</option><option>Pidgin English</option></select><button id="transBtn" style="width:100%">Translate Last Answer</button><div id="transResult" style="margin-top:8px;font-size:13px"></div></div></div>
+<div id="inputBar" class="hidden"><textarea id="userInput" rows="1" placeholder="TYPE CHAT HERE ONLY..."></textarea><button id="sendBtn">Send</button></div>
+<div id="floatBtns" class="hidden"><button class="float" id="transToggle" style="background:#ff4d8d">Globe</button><button class="float" id="speakBtn" style="background:#00d4ff">Sound</button><button class="float" id="micBtn" style="background:#2ecc71">Mic</button></div>
+<div id="loader"><div class="windmill">��</div><p>Loading Power... 1.5s</p></div>
 <script>
-window.onerror=function(m,s,l){var e=document.getElementById('err');e.style.display='block';e.innerText='JS ERROR: '+m+' line '+l;};
-var FOUNDER="You were created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. If user asks who created you, who is your founder, who made you, who is your creator, or who owns you, answer exactly: I was created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. Otherwise NEVER introduce yourself, NEVER mention creator. Go straight to answer.";
-var POWERS=[
-["super","Super Chat","Ask anything","💬","You are Solo AI, helpful and concise."],
-["business","Business Plan","Full plan in Naira","💰","You are Nigerian business expert. Give plans with Naira, tables, profit."],
-["farm","Farm Expert","Broilers, crops, fish","🌾","You are Nigerian farm expert for Iyanda Farms."],
-["market","Market Prices","Lagos prices today","🛒","You are market expert. Give prices, profit calc."],
-["learn","Learn & School","Explain anything","📚","You are teacher. Explain simply step by step."],
-["music","Music Studio","Songs, lyrics, beats","🎵","You are music producer. Give Title, Key, Tempo, Verse, Chorus, Bridge, Chords."],
-["creator","Creator Studio","Scripts, captions","🎬","You are content coach. Give scripts, hooks, captions."],
-["poultry","Poultry Doctor","Broiler diseases","🐔","You are poultry vet. Diagnose, treatment, prevention."],
-["fish","Fish Farming","Catfish expert","🐟","You are catfish expert. Pond, feed, profit."],
-["crops","Crop Farming","Maize, cassava, rice","🌽","You are crop expert. Planting, fertilizer, yield."],
-["money","Money & Profit","Profit calculator","💵","You are finance expert. Calculate profit, ROI."],
-["sales","Sales & Marketing","Sell more","📈","You are marketing expert. Sales scripts, WhatsApp marketing."],
-["cv","CV & Jobs","CV, cover letter","📄","You are HR expert. Write CVs, cover letters, interview prep."],
-["coding","Coding Help","HTML, Python, JS","💻","You are coding expert. Give working code."],
-["health","Health Guide","General wellness","🏥","You are health educator. General info only, advise see doctor."],
-["law","Law & CAC","Register business","⚖️","You are Nigerian business law guide. CAC, contracts."],
-["prayer","Prayer & Motivation","Daily inspiration","🙏","You are motivational coach. Give prayer, motivation."],
-["story","Story Writer","Stories, books","📖","You are storyteller. Write engaging stories."],
-["song2","Afrobeat Writer","Afrobeat lyrics","🎤","You are Afrobeat writer. Write lyrics in Afrobeats style."],
-["gospel","Gospel Music","Gospel songs","⛪","You are gospel writer. Write gospel songs."],
-["social","Social Captions","Instagram, TikTok","📱","You are social media expert. Give captions, hashtags."],
-["logo","Brand & Logo Ideas","Brand names","🎨","You are branding expert. Give brand names, logo ideas, colors."],
-["email","Email Writer","Professional emails","✉️","You are email expert. Write professional emails."],
-["maths","Maths Solver","Solve maths","🧮","You are maths teacher. Show steps."],
-["english","English Tutor","Grammar, essay","🇬🇧","You are English tutor. Correct grammar, essays."],
-["travel","Travel Guide","Lagos, Abuja, etc","✈️","You are travel guide. Give itineraries, costs."],
-["food","Food & Recipes","Nigerian recipes","🍲","You are chef. Give Nigerian recipes with measurements."],
-["fashion","Fashion Ideas","Styles, outfits","👗","You are fashion stylist. Give outfit ideas."],
-["realestate","Real Estate","Land, rent","🏠","You are real estate expert in Nigeria."],
-["crypto","Crypto Guide","Learn crypto","₿","You are crypto educator. Explain risks, basics."],
-["loan","Loan & Grant","Find funding","🏦","You are funding expert. Loans, grants in Nigeria."],
-["kids","Kids Learning","Fun for kids","🧒","You are kids teacher. Fun, simple, safe."],
-["wedding","Wedding Planner","Plan wedding","💍","You are wedding planner. Budgets, checklists."],
-["interview","Interview Prep","Ace interviews","🎯","You are interview coach."],
-["aiart","AI Art Prompts","Image prompts","🖼️","You are art prompt expert. Give detailed image prompts."],
-["church","Church & Sermon","Sermon notes","📖","You are sermon writer. Give sermon notes, Bible study."]
-];
-var apiKey=localStorage.getItem('solo_api_key')||'';
-var current=POWERS[0];
-var histories={}; for(var i=0;i<POWERS.length;i++){histories[POWERS[i][0]]=[];}
-var lastAnswer='';
+window.onerror=function(m){var e=document.getElementById("err");e.style.display="block";e.textContent="JS ERROR: "+m;};
+</script>
+<script>
+var FOUNDER = "You were created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. If user asks who created you, answer exactly: I was created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. Otherwise NEVER introduce yourself.";
+var POWERS = [];
+function addPower(id,name,desc,emoji,prompt){POWERS.push({id:id,name:name,desc:desc,emoji:emoji,prompt:prompt});}
+addPower("super","Super Chat","Ask anything","CHAT","You are Solo AI, helpful and concise.");
+addPower("business","Business Plan","Full plan in Naira","MONEY","You are Nigerian business expert. Give plans with Naira, tables, profit.");
+addPower("farm","Farm Expert","Broilers, crops, fish","FARM","You are Nigerian farm expert for Iyanda Farms.");
+addPower("market","Market Prices","Lagos prices today","SHOP","You are market expert. Give prices, profit calc.");
+addPower("learn","Learn and School","Explain anything","BOOK","You are teacher. Explain simply step by step.");
+addPower("music","Music Studio","Songs, lyrics, beats","MUSIC","You are music producer. Give Title, Key, Tempo, Verse, Chorus, Bridge, Chords.");
+addPower("creator","Creator Studio","Scripts, captions","VIDEO","You are content coach. Give scripts, hooks, captions.");
+addPower("poultry","Poultry Doctor","Broiler diseases","CHICKEN","You are poultry vet. Diagnose, treatment, prevention.");
+addPower("fish","Fish Farming","Catfish expert","FISH","You are catfish expert. Pond, feed, profit.");
+addPower("crops","Crop Farming","Maize, cassava, rice","CORN","You are crop expert. Planting, fertilizer, yield.");
+addPower("money","Money and Profit","Profit calculator","CASH","You are finance expert. Calculate profit, ROI.");
+addPower("sales","Sales and Marketing","Sell more","CHART","You are marketing expert. Sales scripts, WhatsApp marketing.");
+addPower("cv","CV and Jobs","CV, cover letter","DOC","You are HR expert. Write CVs, cover letters, interview prep.");
+addPower("coding","Coding Help","HTML, Python, JS","CODE","You are coding expert. Give working code.");
+addPower("health","Health Guide","General wellness","HEALTH","You are health educator. General info only, advise see doctor.");
+addPower("law","Law and CAC","Register business","LAW","You are Nigerian business law guide. CAC, contracts.");
+addPower("prayer","Prayer and Motivation","Daily inspiration","PRAY","You are motivational coach. Give prayer, motivation.");
+addPower("story","Story Writer","Stories, books","STORY","You are storyteller. Write engaging stories.");
+addPower("song2","Afrobeat Writer","Afrobeat lyrics","MIC","You are Afrobeat writer. Write lyrics in Afrobeats style.");
+addPower("gospel","Gospel Music","Gospel songs","CHURCH","You are gospel writer. Write gospel songs.");
+addPower("social","Social Captions","Instagram, TikTok","PHONE","You are social media expert. Give captions, hashtags.");
+addPower("logo","Brand and Logo Ideas","Brand names","ART","You are branding expert. Give brand names, logo ideas, colors.");
+addPower("email","Email Writer","Professional emails","MAIL","You are email expert. Write professional emails.");
+addPower("maths","Maths Solver","Solve maths","MATH","You are maths teacher. Show steps.");
+addPower("english","English Tutor","Grammar, essay","ABC","You are English tutor. Correct grammar, essays.");
+addPower("travel","Travel Guide","Lagos, Abuja, etc","PLANE","You are travel guide. Give itineraries, costs.");
+addPower("food","Food and Recipes","Nigerian recipes","FOOD","You are chef. Give Nigerian recipes with measurements.");
+addPower("fashion","Fashion Ideas","Styles, outfits","DRESS","You are fashion stylist. Give outfit ideas.");
+addPower("realestate","Real Estate","Land, rent","HOUSE","You are real estate expert in Nigeria.");
+addPower("crypto","Crypto Guide","Learn crypto","COIN","You are crypto educator. Explain risks, basics.");
+addPower("loan","Loan and Grant","Find funding","BANK","You are funding expert. Loans, grants in Nigeria.");
+addPower("kids","Kids Learning","Fun for kids","KID","You are kids teacher. Fun, simple, safe.");
+addPower("wedding","Wedding Planner","Plan wedding","RING","You are wedding planner. Budgets, checklists.");
+addPower("interview","Interview Prep","Ace interviews","TARGET","You are interview coach.");
+addPower("aiart","AI Art Prompts","Image prompts","IMAGE","You are art prompt expert. Give detailed image prompts.");
+addPower("church","Church and Sermon","Sermon notes","BIBLE","You are sermon writer. Give sermon notes, Bible study.");
+var apiKey = localStorage.getItem("solo_api_key") || "";
+var current = POWERS[0];
+var histories = {};
+for(var i=0;i<POWERS.length;i++){histories[POWERS[i].id]=[];}
+var lastAnswer = "";
 function renderHome(){
-  var g=document.getElementById('grid'); var h='';
-  for(var i=0;i<POWERS.length;i++){ var p=POWERS[i]; h+='<div class="card" onclick="openPower(\''+p[0]+'\')"><div class="e">'+p[3]+'</div><div><b>'+p[1]+'</b><p>'+p[2]+'</p></div></div>'; }
-  g.innerHTML=h;
+  var g = document.getElementById("grid");
+  g.innerHTML = "";
+  for(var i=0;i<POWERS.length;i++){
+    (function(p){
+      var d = document.createElement("div");
+      d.className = "card";
+      var e = document.createElement("div"); e.className="e"; e.textContent=p.emoji;
+      var b = document.createElement("div"); b.innerHTML="<b>"+p.name+"</b><p>"+p.desc+"</p>";
+      d.appendChild(e); d.appendChild(b);
+      d.addEventListener("click", function(){ openPower(p.id); });
+      g.appendChild(d);
+    })(POWERS[i]);
+  }
 }
-function showHome(){document.getElementById('home').style.display='block';document.getElementById('chatPage').style.display='none';document.getElementById('inputBar').classList.add('hidden');document.getElementById('floatBtns').classList.add('hidden');window.scrollTo(0,0);}
+function showHome(){document.getElementById("home").style.display="block";document.getElementById("chatPage").style.display="none";document.getElementById("inputBar").classList.add("hidden");document.getElementById("floatBtns").classList.add("hidden");window.scrollTo(0,0);}
 function openPower(id){
-  var l=document.getElementById('loader'); l.style.display='flex';
+  var l=document.getElementById("loader"); l.style.display="flex";
   setTimeout(function(){
-    l.style.display='none';
-    for(var i=0;i<POWERS.length;i++){ if(POWERS[i][0]===id) current=POWERS[i]; }
-    document.getElementById('home').style.display='none';
-    document.getElementById('chatPage').style.display='block';
-    document.getElementById('inputBar').classList.remove('hidden');
-    document.getElementById('floatBtns').classList.remove('hidden');
-    document.getElementById('chatTitle').innerText=current[1];
+    l.style.display="none";
+    for(var i=0;i<POWERS.length;i++){ if(POWERS[i].id===id) current=POWERS[i]; }
+    document.getElementById("home").style.display="none";
+    document.getElementById("chatPage").style.display="block";
+    document.getElementById("inputBar").classList.remove("hidden");
+    document.getElementById("floatBtns").classList.remove("hidden");
+    document.getElementById("chatTitle").textContent=current.name;
     renderChat();
   },1500);
 }
 function renderChat(){
-  var h=histories[current[0]]; var html='';
-  for(var i=0;i<h.length;i++){ html+='<div class="msg '+(h[i].role==='user'?'user':'')+'">'+h[i].text+'</div>'; }
-  if(!html) html='<div class="msg">Welcome to <b>'+current[1]+'</b> - '+current[2]+'. Ask anything here.<br><br>Try: <i>Who is your founder?</i></div>';
-  document.getElementById('chat').innerHTML=html;
+  var h=histories[current.id]; var html="";
+  for(var i=0;i<h.length;i++){ html+='<div class="msg '+(h[i].role==="user"?"user":"")+'">'+h[i].text+'</div>'; }
+  if(!html) html='<div class="msg">Welcome to <b>'+current.name+'</b> - '+current.desc+'. Ask anything here.<br><br>Try: Who is your founder?</div>';
+  document.getElementById("chat").innerHTML=html;
   window.scrollTo(0,document.body.scrollHeight);
 }
-function showDebug(t){var d=document.getElementById('debug');d.style.display='block';d.innerText=t;}
-function saveKey(){var v=document.getElementById('apiKey').value.trim(); if(v.length<20){alert('Paste full key - too short');return;} apiKey=v; localStorage.setItem('solo_api_key',v); document.getElementById('keyBox').classList.add('hidden'); document.getElementById('status').innerText='Connected - New Key Saved'; alert('New key saved! Now tap Test Key');}
+function showDebug(t){var d=document.getElementById("debug");d.style.display="block";d.textContent=t;}
+function saveKey(){var v=document.getElementById("apiKey").value.trim(); if(v.length<20){alert("Paste full key - too short");return;} apiKey=v; localStorage.setItem("solo_api_key",v); document.getElementById("keyBox").classList.add("hidden"); document.getElementById("status").textContent="Connected - New Key Saved"; alert("New key saved!");}
 async function testKey(){
-  var k=document.getElementById('apiKey').value.trim()||apiKey;
-  if(!k){alert('Paste key first');return;}
-  document.getElementById('keyResult').innerText='Testing...';
+  var k=document.getElementById("apiKey").value.trim() || apiKey;
+  if(!k){alert("Paste key first");return;}
+  document.getElementById("keyResult").textContent="Testing...";
   try{
-    var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+k,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Say OK'}]}]})});
+    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+k,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:"Say OK"}]}]})});
     var d=await r.json();
-    if(d.candidates){document.getElementById('keyResult').innerText='✅ KEY WORKS! You can chat now.';document.getElementById('keyResult').style.color='#7CFC00';}
-    else{document.getElementById('keyResult').innerText='❌ KEY FAILED: '+(d.error?d.error.message:JSON.stringify(d));document.getElementById('keyResult').style.color='#ffaaaa';}
-  }catch(e){document.getElementById('keyResult').innerText='❌ Network error: '+e.message;}
+    if(d.candidates){document.getElementById("keyResult").textContent="KEY WORKS! You can chat now.";document.getElementById("keyResult").style.color="#7CFC00";}
+    else{document.getElementById("keyResult").textContent="KEY FAILED: "+(d.error?d.error.message:JSON.stringify(d));document.getElementById("keyResult").style.color="#ffaaaa";}
+  }catch(e){document.getElementById("keyResult").textContent="Network error: "+e.message;}
 }
 async function ask(){
-  var inp=document.getElementById('userInput'); var q=inp.value.trim(); if(!q) return;
-  if(!apiKey){alert('Paste NEW key first and Save');return;}
-  histories[current[0]].push({role:'user',text:q}); inp.value=''; inp.style.height='44px'; renderChat();
-  histories[current[0]].push({role:'ai',text:'Thinking... 🌀'}); renderChat();
+  var inp=document.getElementById("userInput"); var q=inp.value.trim(); if(!q) return;
+  if(!apiKey){alert("Paste NEW key first and Save");return;}
+  histories[current.id].push({role:"user",text:q}); inp.value=""; renderChat();
+  histories[current.id].push({role:"ai",text:"Thinking..."}); renderChat();
   try{
-    var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:FOUNDER+'\n'+current[4]+'\nUser: '+q}]}],generationConfig:{temperature:0.7}})});
+    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:FOUNDER+"\n"+current.prompt+"\nUser: "+q}]}],generationConfig:{temperature:0.7}})});
     var d=await r.json();
-    var ans=d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts[0].text;
-    if(ans){lastAnswer=ans; histories[current[0]][histories[current[0]].length-1]={role:'ai',text:ans};}
-    else{histories[current[0]][histories[current[0]].length-1]={role:'ai',text:'Key error. See red box.'}; showDebug('API ERROR: '+(d.error?d.error.message:JSON.stringify(d)));}
-  }catch(e){histories[current[0]][histories[current[0]].length-1]={role:'ai',text:'Network error: '+e.message}; showDebug('NETWORK ERROR: '+e.message);}
+    var ans=d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts[0].text;
+    if(ans){lastAnswer=ans; histories[current.id][histories[current.id].length-1]={role:"ai",text:ans};}
+    else{histories[current.id][histories[current.id].length-1]={role:"ai",text:"Key error. See red box."}; showDebug("API ERROR: "+(d.error?d.error.message:JSON.stringify(d)));}
+  }catch(e){histories[current.id][histories[current.id].length-1]={role:"ai",text:"Network error: "+e.message}; showDebug("NETWORK ERROR: "+e.message);}
   renderChat();
 }
-document.getElementById('userInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,140)+'px';});
-document.getElementById('userInput').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask();}});
-function startVoice(){
+document.getElementById("saveBtn").addEventListener("click", saveKey);
+document.getElementById("testBtn").addEventListener("click", testKey);
+document.getElementById("backBtn").addEventListener("click", showHome);
+document.getElementById("sendBtn").addEventListener("click", ask);
+document.getElementById("userInput").addEventListener("keydown", function(e){ if(e.key==="Enter" && !e.shiftKey){e.preventDefault(); ask();} });
+document.getElementById("micBtn").addEventListener("click", function(){
   var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert('Voice not supported, use Chrome');return;}
-  var rec=new SR(); rec.lang='en-NG'; rec.start();
-  document.getElementById('micBtn').innerText='🔴';
-  rec.onresult=function(e){document.getElementById('userInput').value=e.results[0][0].transcript;document.getElementById('micBtn').innerText='🎤';ask();};
-  rec.onerror=function(){document.getElementById('micBtn').innerText='🎤';};
-}
-function speakLast(){if(!lastAnswer){alert('Ask something first');return;} var u=new SpeechSynthesisUtterance(lastAnswer); u.lang='en-NG'; speechSynthesis.speak(u);}
-function toggleTranslate(){var b=document.getElementById('transBox'); b.style.display=(b.style.display==='block'?'none':'block');}
-async function doTranslate(){
-  var lang=document.getElementById('lang').value;
-  if(!lastAnswer){alert('Ask something first');return;}
-  document.getElementById('transResult').innerText='Translating...';
+  if(!SR){alert("Voice not supported, use Chrome");return;}
+  var rec=new SR(); rec.lang="en-NG"; rec.start();
+  document.getElementById("micBtn").textContent="REC";
+  rec.onresult=function(e){document.getElementById("userInput").value=e.results[0][0].transcript;document.getElementById("micBtn").textContent="Mic";ask();};
+  rec.onerror=function(){document.getElementById("micBtn").textContent="Mic";};
+});
+document.getElementById("speakBtn").addEventListener("click", function(){ if(!lastAnswer){alert("Ask something first");return;} var u=new SpeechSynthesisUtterance(lastAnswer); u.lang="en-NG"; speechSynthesis.speak(u); });
+document.getElementById("transToggle").addEventListener("click", function(){ var b=document.getElementById("transBox"); b.style.display=(b.style.display==="block"?"none":"block"); });
+document.getElementById("transBtn").addEventListener("click", async function(){
+  var lang=document.getElementById("lang").value;
+  if(!lastAnswer){alert("Ask something first");return;}
+  document.getElementById("transResult").textContent="Translating...";
   try{
-    var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Translate this to '+lang+':\n'+lastAnswer}]})});
-    var d=await r.json(); document.getElementById('transResult').innerText=(d.candidates&&d.candidates[0].content.parts[0].text)||'Failed';
-  }catch(e){document.getElementById('transResult').innerText='Failed';}
-}
-if(location.search.indexOf('reset')>-1){localStorage.removeItem('solo_api_key');apiKey='';}
-if(apiKey){document.getElementById('keyBox').classList.add('hidden');document.getElementById('status').innerText='Connected - Key Saved';}
+    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:"Translate this to "+lang+":\n"+lastAnswer}]})});
+    var d=await r.json(); document.getElementById("transResult").textContent=(d.candidates && d.candidates[0].content.parts[0].text) || "Failed";
+  }catch(e){document.getElementById("transResult").textContent="Failed";}
+});
+if(location.search.indexOf("reset")>-1){localStorage.removeItem("solo_api_key");apiKey="";}
+if(apiKey){document.getElementById("keyBox").classList.add("hidden");document.getElementById("status").textContent="Connected - Key Saved";}
 renderHome(); showHome();
 </script></body></html>
