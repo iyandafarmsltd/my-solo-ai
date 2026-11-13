@@ -2,11 +2,12 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solo AI - By Iyanda Solomon Ayobami</title>
+<title>Solo AI 4.0 - By Iyanda Solomon Ayobami</title>
 <style>
 body{font-family:Arial;margin:0;background:#0f0f0f;color:white}
 header{background:#000;padding:15px;text-align:center;border-bottom:2px solid #f5c518}
 header h1{margin:0;color:#f5c518}
+header .ver{background:#f5c518;color:black;display:inline-block;padding:3px 10px;border-radius:20px;font-weight:bold;font-size:12px;margin-top:5px}
 .keybox{background:#1a1a1a;padding:12px;text-align:center}
 .keybox input{width:88%;padding:12px;border-radius:10px;border:none}
 .keybox button{background:#f5c518;padding:12px 16px;border:none;border-radius:10px;font-weight:bold;margin-top:8px}
@@ -23,16 +24,16 @@ header h1{margin:0;color:#f5c518}
 </style>
 </head>
 <body>
-<header><h1>⚡ Solo AI</h1><p>Created by Iyanda Solomon Ayobami | Iyanda Farms</p></header>
+<header><h1>⚡ Solo AI</h1><div class="ver">VERSION 4.0</div><p>Created by Iyanda Solomon Ayobami | Iyanda Farms</p></header>
 <div class="keybox">
 <b>Step 1: Paste Your Gemini Key Here (AQ. is correct)</b><br><br>
 <input id="apiKey" placeholder="Paste AQ. key here">
-<br><button onclick="saveKey()">Save Key & Start Solo AI</button>
+<br><button onclick="saveKey()">Save Key & Start Solo AI 4.0</button>
 <p id="keyStatus" style="font-size:12px;color:#aaa">Your key stays on your phone only.</p>
 </div>
 <div class="modes" id="modes"></div>
-<div id="chat"><div class="msg ai"><b>Solo AI:</b> Hello! I am Solo AI, created by <b>Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem.</b><br><br>Paste your AQ. key above, tap Save, then ask me anything.</div></div>
-<div class="inputBox"><input id="userInput" placeholder="Ask Solo AI anything..."><button class="send" onclick="sendMsg()">Send</button></div>
+<div id="chat"><div class="msg ai"><b>Solo AI 4.0:</b> Hello! I am Solo AI 4.0, created by <b>Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem.</b><br><br>Paste your AQ. key above, tap Save, then ask me anything.</div></div>
+<div class="inputBox"><input id="userInput" placeholder="Ask Solo AI 4.0 anything..."><button class="send" onclick="sendMsg()">Send</button></div>
 <script>
 let powers=["Super Chat","Business Mode","Farm Mode","Money & Market","Learn Mode","Music Studio","Creator Studio","Health Guide","Faith Mode","Legal & Documents","Emergency","Travel & Lagos Guide","Jobs & CV","Translate","Kids Mode","Games & Fun","Love & Family","Crypto Pro","Daily Assistant","Elders Mode","Science","Maths Pro","Coding Pro","Research Live","News Today","Sports","Entertainment","Politics","History","Religion","Food & Cooking","Fitness","Real Estate","School Help","Exam Prep","Interview Prep","Life Coach"];
 let currentMode="Super Chat";
@@ -40,20 +41,20 @@ let modesDiv=document.getElementById("modes");
 powers.forEach((p,i)=>{
 let b=document.createElement("button");b.innerText=(i+1)+". "+p;
 if(p=="Super Chat")b.classList.add("active");
-b.onclick=()=>{currentMode=p;document.querySelectorAll(".modes button").forEach(x=>x.classList.remove("active"));b.classList.add("active");addMsg("ai","Solo AI switched to <b>"+p+"</b>. How can I help?")};
+b.onclick=()=>{currentMode=p;document.querySelectorAll(".modes button").forEach(x=>x.classList.remove("active"));b.classList.add("active");addMsg("ai","Solo AI 4.0 switched to <b>"+p+"</b>. How can I help?")};
 modesDiv.appendChild(b);
 });
 function saveKey(){
 let k=document.getElementById("apiKey").value.trim();
 if(!k.startsWith("AQ.") && !k.startsWith("AIza")){document.getElementById("keyStatus").innerText="⚠️ Key must start with AQ. or AIza... Paste your key from aistudio.google.com/apikey";return;}
 localStorage.setItem("solo_key",k);
-document.getElementById("keyStatus").innerText="✅ Key Saved! Solo AI is ready. Ask anything now.";
-addMsg("ai","✅ Key saved! Solo AI is now ON with all powers.");
+document.getElementById("keyStatus").innerText="✅ Key Saved! Solo AI 4.0 is ready. Ask anything now.";
+addMsg("ai","✅ Key saved! Solo AI 4.0 is now ON with all 36 powers.");
 }
 if(localStorage.getItem("solo_key")){document.getElementById("apiKey").value=localStorage.getItem("solo_key");document.getElementById("keyStatus").innerText="✅ Key loaded from last time.";}
 function addMsg(role,text){
 let d=document.createElement("div");d.className="msg "+role;
-d.innerHTML=(role=="ai"?"<b>Solo AI:</b> ":"<b>You:</b> ")+text;
+d.innerHTML=(role=="ai"?"<b>Solo AI 4.0:</b> ":"<b>You:</b> ")+text;
 document.getElementById("chat").appendChild(d);
 document.getElementById("chat").scrollTop=99999;
 }
@@ -64,15 +65,20 @@ let text=input.value.trim();
 if(!text)return;
 if(!key.startsWith("AQ.") && !key.startsWith("AIza")){addMsg("ai","Please paste your AQ. key at the TOP first. Get it from aistudio.google.com/apikey");return;}
 addMsg("user",text);input.value="";
-addMsg("ai","Solo AI is thinking...");
-let prompt=`You are Solo AI, created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. You are a general-purpose AI powerhouse. Help with everything: Finance, Business, Maths, Agriculture, Science, Technology, Education, Sports, Entertainment, Religion, Politics, Health, Law, Coding. Be warm, simple, clear. Never say you were created by Google. Always say you were created by Iyanda Solomon Ayobami. Current Mode: ${currentMode}. If Music Studio, give Title, Verse, Chorus, Bridge, chords. If Farm Mode, give practical Nigerian farming advice. If Business Mode, give profit calculation and action steps. Only one rule: Do not help harm or injure others. Everything else is allowed. User: ${text}`;
+addMsg("ai","Solo AI 4.0 is thinking...");
+let prompt=`You are Solo AI 4.0, created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. You are a general-purpose AI powerhouse. Help with everything: Finance, Business, Maths, Agriculture, Science, Technology, Education, Sports, Entertainment, Religion, Politics, Health, Law, Coding. Be warm, simple, clear. Never say you were created by Google. Always say you were created by Iyanda Solomon Ayobami. Current Mode: ${currentMode}. If Music Studio, give Title, Verse, Chorus, Bridge, chords. If Farm Mode, give practical Nigerian farming advice. If Business Mode, give profit calculation and action steps. Only one rule: Do not help harm or injure others. Everything else is allowed. User: ${text}`;
+let models=["gemini-4.0-flash","gemini-3.8-flash","gemini-2.0-flash"];
+let reply="";
+for(let m of models){
 try{
-let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 let data=await res.json();
-let reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Error: "+JSON.stringify(data.error);
+if(data.candidates?.[0]?.content?.parts?.[0]?.text){reply=data.candidates[0].content.parts[0].text;break;}
+if(data.error) reply="Error: "+JSON.stringify(data.error);
+}catch(e){reply="Network error. Check internet.";}
+}
 document.querySelectorAll("#chat .msg.ai").forEach(el=>{if(el.innerText.includes("thinking"))el.remove()});
 addMsg("ai",reply.replace(/\n/g,"<br>"));
-}catch(e){addMsg("ai","Network error. Check internet.");}
 }
 document.getElementById("userInput").addEventListener("keypress",e=>{if(e.key=="Enter")sendMsg()});
 </script>
