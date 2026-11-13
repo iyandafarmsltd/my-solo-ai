@@ -1,92 +1,175 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Solo AI 4.1 - Iyanda Farms</title>
+<title>Solo AI 5.0 - Iyanda Farms Ecosystem</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#fff;background:#0a0a0a}
-header{padding:12px;text-align:center;background:#111;position:sticky;top:0;z-index:10}
-#keyBox{background:#1a1a1a;padding:10px;text-align:center}
-#keyBox input{width:70%;padding:10px;border-radius:8px;border:1px solid #333;background:#000;color:#fff}
-button{padding:10px 14px;border:none;border-radius:8px;background:#FFD700;color:#000;font-weight:bold;cursor:pointer}
-#modes{display:flex;overflow-x:auto;gap:6px;padding:10px;background:#111}
-.modeBtn{white-space:nowrap;padding:8px 12px;border-radius:20px;background:#222;color:#fff;border:1px solid #333}
-.modeBtn.active{background:#FFD700;color:#000}
-#chat{padding:14px;min-height:60vh;padding-bottom:90px;line-height:1.6}
-.msg{margin:12px 0;padding:12px;border-radius:12px;background:rgba(0,0,0,.55);white-space:pre-wrap}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#0b0b12;color:#fff}
+header{padding:14px;text-align:center;background:linear-gradient(90deg,#000,#1a1a2e,#000);position:sticky;top:0;z-index:20}
+header b{font-size:20px;letter-spacing:1px;color:#FFD700}
+header p{margin:4px 0 0;font-size:12px;opacity:.8}
+#keyBox{padding:12px;text-align:center;background:#16161f}
+#keyBox input{width:68%;padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#fff}
+button{border:none;border-radius:10px;padding:10px 14px;background:#FFD700;color:#000;font-weight:bold;cursor:pointer}
+#home{padding:14px}
+.hero{border-radius:18px;padding:20px;background:linear-gradient(135deg,#FFD700,#ff8c00,#ff4d8d);color:#000;text-align:center}
+.hero h1{margin:0;font-size:26px}.hero p{margin:6px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.card{border-radius:16px;overflow:hidden;background:#181824;border:1px solid #2a2a3a;cursor:pointer}
+.card img{width:100%;height:90px;object-fit:cover;display:block}
+.card div{padding:10px}.card b{font-size:14px}.card p{font-size:11px;opacity:.7;margin:4px 0 0}
+#chatPage{display:none}
+#topBar{display:flex;gap:8px;align-items:center;padding:10px;background:#111}
+#chat{padding:14px;padding-bottom:120px;line-height:1.65;min-height:60vh}
+.msg{margin:12px 0;padding:13px;border-radius:14px;background:rgba(255,255,255,.08);white-space:pre-wrap}
 .user{background:#FFD700;color:#000;font-weight:bold}
-#inputBar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;padding:10px;background:#111}
-#inputBar input{flex:1;padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#fff}
+#inputBar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;align-items:flex-end;padding:10px;background:#111;z-index:30}
+#userInput{flex:1;padding:12px;border-radius:12px;border:1px solid #333;background:#000;color:#fff;resize:none;min-height:44px;max-height:140px;overflow-y:auto;font-family:Arial}
+#loader{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:99}
+.windmill{font-size:70px;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#floatBtns{position:fixed;right:12px;bottom:100px;display:flex;flex-direction:column;gap:10px;z-index:40}
+.float{width:52px;height:52px;border-radius:50%;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(0,0,0,.5)}
+#transBox{position:fixed;left:10px;right:10px;bottom:88px;background:#1e1e2e;padding:10px;border-radius:12px;display:none;z-index:41}
+#transBox select{width:100%;padding:10px;border-radius:8px;background:#000;color:#fff;margin-bottom:6px}
 .hidden{display:none}
 </style></head><body>
-<header><b id="appTitle">SOLO AI 4.1</b><div id="modeLabel" style="font-size:12px;opacity:.8">Super Chat</div>
-<div id="status" style="font-size:12px;color:#7CFC00">● Connected - Key Saved</div></header>
-
+<header><b>SOLO AI 5.0</b><p id="modeLabel">Iyanda Farms Ecosystem • 36 Powers</p><p id="status" style="color:#7CFC00;font-size:12px">● Connected - Key Saved Forever</p></header>
 <div id="keyBox"><input id="apiKey" placeholder="Paste AQ. key once"><button onclick="saveKey()">Save & Lock Key</button></div>
 
-<div id="modes"></div>
+<div id="home">
+<div class="hero"><h1>Welcome Founder 👋</h1><p>Iyanda Solomon Ayobami • Iyanda Farms Ecosystem</p><p>Tap any power below to open its own dashboard</p></div>
+<div style="display:flex;gap:8px;margin-top:12px"><input id="search" oninput="renderHome()" placeholder="Search 36 powers..." style="flex:1;padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#fff"><button onclick="showHome()">🏠 Home</button></div>
+<div id="grid" class="grid"></div>
+</div>
+
+<div id="chatPage">
+<div id="topBar"><button onclick="showHome()">← Menu</button><b id="chatTitle">Super Chat</b><span id="chatBadge" style="font-size:11px;opacity:.7"></span></div>
 <div id="chat"></div>
-<div id="inputBar"><input id="userInput" placeholder="Ask Solo AI..."><button onclick="ask()">Send</button></div>
+<div id="transBox"><select id="lang"><option value="Yoruba">Yoruba</option><option value="Hausa">Hausa</option><option value="Igbo">Igbo</option><option value="French">French</option><option value="Spanish">Spanish</option><option value="English">English</option><option value="Pidgin English">Pidgin</option></select><button onclick="doTranslate()" style="width:100%">Translate Last Answer</button><div id="transResult" style="margin-top:8px;font-size:13px"></div></div>
+</div>
+
+<div id="inputBar" class="hidden"><textarea id="userInput" rows="1" placeholder="Ask Solo AI anything..."></textarea><button onclick="ask()">Send</button></div>
+
+<div id="floatBtns" class="hidden">
+<button class="float" style="background:#ff4d8d" onclick="toggleTranslate()">🌐</button>
+<button class="float" style="background:#00d4ff" onclick="speakLast()">🔊</button>
+<button class="float" id="micBtn" style="background:#2ecc71" onclick="startVoice()">🎤</button>
+</div>
+
+<div id="loader"><div class="windmill">🌀</div><p>Loading Power... 1.5s</p><p style="font-size:12px;opacity:.7">Solo AI 5.0 • Iyanda Farms</p></div>
 
 <script>
-const MODES=[
-{id:'super',name:'1. Super Chat',bg:'#0a0a0a',accent:'#FFD700',prompt:'You are Solo AI. Be helpful, concise. NEVER introduce yourself or mention creator unless user asks who created you.'},
-{id:'business',name:'2. Business',bg:'#1a1200',accent:'#FFD700',prompt:'You are a Nigerian business expert. Give clear plans, Naira amounts, tables. NEVER introduce yourself.'},
-{id:'farm',name:'3. Farm Mode',bg:'#06210f',accent:'#2ecc71',prompt:'You are a Nigerian farm expert for Iyanda Farms. Practical steps, local prices. NEVER introduce yourself.'},
-{id:'money',name:'4. Money & Market',bg:'#0d1a2e',accent:'#00d4ff',prompt:'You are a money/market expert. Prices, profit calc. NEVER introduce yourself.'},
-{id:'learn',name:'5. Learn Mode',bg:'#220a2e',accent:'#c084fc',prompt:'You are a teacher. Explain simply step by step. NEVER introduce yourself.'},
-{id:'music',name:'6. Music Studio',bg:'#2b0a1a',accent:'#ff4d8d',prompt:'You are a music producer. Give Title, Key, Tempo, Verse, Chorus, Bridge, Chords. Do NOT repeat intro.'},
-{id:'creator',name:'7. Creator Studio',bg:'#1a0f00',accent:'#ff8c00',prompt:'You are a content creator coach. Give scripts, captions, hooks. NEVER introduce yourself.'},
+const FOUNDER="You were created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. If user asks who created you, who is your founder, who made you, who is your creator, or who owns you, answer: 'I was created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem.' Otherwise NEVER introduce yourself, NEVER mention creator, NEVER say Solo AI 5.0 in answer. Go straight to answer.";
+const POWERS=[
+{id:'super',name:'Super Chat',desc:'Ask anything',img:'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400',cat:'super',prompt:'You are Solo AI, helpful and concise.'},
+{id:'business',name:'Business Plan',desc:'Full plan in Naira',img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400',cat:'business',prompt:'You are a Nigerian business expert. Give plans with Naira, tables, profit.'},
+{id:'farm',name:'Farm Expert',desc:'Broilers, crops, fish',img:'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=400',cat:'farm',prompt:'You are a Nigerian farm expert for Iyanda Farms. Practical local advice.'},
+{id:'market',name:'Market Prices',desc:'Lagos prices today',img:'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400',cat:'money',prompt:'You are market expert. Give prices, profit calc.'},
+{id:'learn',name:'Learn & School',desc:'Explain anything',img:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400',cat:'learn',prompt:'You are a teacher. Explain simply step by step.'},
+{id:'music',name:'Music Studio',desc:'Songs, lyrics, beats',img:'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',cat:'music',prompt:'You are a music producer. Give Title, Key, Tempo, Verse, Chorus, Bridge, Chords.'},
+{id:'creator',name:'Creator Studio',desc:'Scripts, captions',img:'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400',cat:'creator',prompt:'You are a content coach. Give scripts, hooks, captions.'},
+{id:'poultry',name:'Poultry Doctor',desc:'Broiler diseases',img:'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400',cat:'farm',prompt:'You are a poultry vet. Diagnose, treatment, prevention.'},
+{id:'fish',name:'Fish Farming',desc:'Catfish expert',img:'https://images.unsplash.com/photo-1535591273668-578e31182c4f?w=400',cat:'farm',prompt:'You are catfish expert. Pond, feed, profit.'},
+{id:'crops',name:'Crop Farming',desc:'Maize, cassava, rice',img:'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400',cat:'farm',prompt:'You are crop expert. Planting, fertilizer, yield.'},
+{id:'money',name:'Money & Profit',desc:'Profit calculator',img:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400',cat:'money',prompt:'You are finance expert. Calculate profit, ROI.'},
+{id:'sales',name:'Sales & Marketing',desc:'Sell more',img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400',cat:'business',prompt:'You are marketing expert. Sales scripts, WhatsApp marketing.'},
+{id:'cv',name:'CV & Jobs',desc:'CV, cover letter',img:'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400',cat:'learn',prompt:'You are HR expert. Write CVs, cover letters, interview prep.'},
+{id:'coding',name:'Coding Help',desc:'HTML, Python, JS',img:'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400',cat:'learn',prompt:'You are coding expert. Give working code.'},
+{id:'health',name:'Health Guide',desc:'General wellness',img:'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400',cat:'learn',prompt:'You are health educator. General info only, advise see doctor.'},
+{id:'law',name:'Law & CAC',desc:'Register business',img:'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400',cat:'business',prompt:'You are Nigerian business law guide. CAC, contracts.'},
+{id:'prayer',name:'Prayer & Motivation',desc:'Daily inspiration',img:'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=400',cat:'super',prompt:'You are motivational coach. Give prayer, motivation.'},
+{id:'story',name:'Story Writer',desc:'Stories, books',img:'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400',cat:'creator',prompt:'You are storyteller. Write engaging stories.'},
+{id:'song2',name:'Afrobeat Writer',desc:'Afrobeat lyrics',img:'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400',cat:'music',prompt:'You are Afrobeat writer. Write lyrics in Afrobeats style.'},
+{id:'gospel',name:'Gospel Music',desc:'Gospel songs',img:'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400',cat:'music',prompt:'You are gospel writer. Write gospel songs.'},
+{id:'social',name:'Social Captions',desc:'Instagram, TikTok',img:'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400',cat:'creator',prompt:'You are social media expert. Give captions, hashtags.'},
+{id:'logo',name:'Brand & Logo Ideas',desc:'Brand names',img:'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400',cat:'creator',prompt:'You are branding expert. Give brand names, logo ideas, colors.'},
+{id:'email',name:'Email Writer',desc:'Professional emails',img:'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400',cat:'business',prompt:'You are email expert. Write professional emails.'},
+{id:'maths',name:'Maths Solver',desc:'Solve maths',img:'https://images.unsplash.com/photo-1596495578065-6e0763fa1178?w=400',cat:'learn',prompt:'You are maths teacher. Show steps.'},
+{id:'english',name:'English Tutor',desc:'Grammar, essay',img:'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400',cat:'learn',prompt:'You are English tutor. Correct grammar, essays.'},
+{id:'travel',name:'Travel Guide',desc:'Lagos, Abuja, etc',img:'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400',cat:'super',prompt:'You are travel guide. Give itineraries, costs.'},
+{id:'food',name:'Food & Recipes',desc:'Nigerian recipes',img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400',cat:'super',prompt:'You are chef. Give Nigerian recipes with measurements.'},
+{id:'fashion',name:'Fashion Ideas',desc:'Styles, outfits',img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400',cat:'creator',prompt:'You are fashion stylist. Give outfit ideas.'},
+{id:'realestate',name:'Real Estate',desc:'Land, rent',img:'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400',cat:'business',prompt:'You are real estate expert in Nigeria.'},
+{id:'crypto',name:'Crypto Guide',desc:'Learn crypto',img:'https://images.unsplash.com/photo-1518546305927-5a16e0ab9cdb?w=400',cat:'money',prompt:'You are crypto educator. Explain risks, basics.'},
+{id:'loan',name:'Loan & Grant',desc:'Find funding',img:'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400',cat:'money',prompt:'You are funding expert. Loans, grants in Nigeria.'},
+{id:'kids',name:'Kids Learning',desc:'Fun for kids',img:'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400',cat:'learn',prompt:'You are kids teacher. Fun, simple, safe.'},
+{id:'wedding',name:'Wedding Planner',desc:'Plan wedding',img:'https://images.unsplash.com/photo-1519741497674-611481863552?w=400',cat:'super',prompt:'You are wedding planner. Budgets, checklists.'},
+{id:'interview',name:'Interview Prep',desc:'Ace interviews',img:'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400',cat:'learn',prompt:'You are interview coach.'},
+{id:'aiart',name:'AI Art Prompts',desc:'Image prompts',img:'https://images.unsplash.com/photo-1547658719-da2b51169166?w=400',cat:'creator',prompt:'You are art prompt expert. Give detailed image prompts.'},
+{id:'church',name:'Church & Sermon',desc:'Sermon notes',img:'https://images.unsplash.com/photo-1438032005730-c779502df39b?w=400',cat:'super',prompt:'You are sermon writer. Give sermon notes, Bible study.'},
 ];
-let current='super';
-let histories={}; MODES.forEach(m=>histories[m.id]=[]);
 let apiKey=localStorage.getItem('solo_api_key')||'';
-let introduced=false;
+let current=POWERS[0];
+let histories={}; POWERS.forEach(p=>histories[p.id]=[]);
+let lastAnswer='';
 
-function renderModes(){
-  document.getElementById('modes').innerHTML=MODES.map(m=>`<button class="modeBtn ${m.id===current?'active':''}" onclick="switchMode('${m.id}')">${m.name}</button>`).join('');
+function renderHome(){
+  let q=(document.getElementById('search').value||'').toLowerCase();
+  let list=POWERS.filter(p=>p.name.toLowerCase().includes(q));
+  document.getElementById('grid').innerHTML=list.map(p=>`<div class="card" onclick="openPower('${p.id}')"><img src="${p.img}" onerror="this.src='https://picsum.photos/400/200?random=${p.id}'"><div><b>${p.name}</b><p>${p.desc}</p></div></div>`).join('');
 }
-function switchMode(id){
-  current=id; let m=MODES.find(x=>x.id===id);
-  document.body.style.background=m.bg;
-  document.getElementById('appTitle').innerText='SOLO AI 4.1 - '+m.name;
-  document.getElementById('modeLabel').innerText=m.name+' • '+m.accent;
-  renderModes(); renderChat();
+function showHome(){document.getElementById('home').style.display='block';document.getElementById('chatPage').style.display='none';document.getElementById('inputBar').classList.add('hidden');document.getElementById('floatBtns').classList.add('hidden');window.scrollTo(0,0)}
+function openPower(id){
+  let l=document.getElementById('loader');l.style.display='flex';
+  setTimeout(()=>{
+    l.style.display='none';
+    current=POWERS.find(p=>p.id===id);
+    document.getElementById('home').style.display='none';
+    document.getElementById('chatPage').style.display='block';
+    document.getElementById('inputBar').classList.remove('hidden');
+    document.getElementById('floatBtns').classList.remove('hidden');
+    document.getElementById('chatTitle').innerText=current.name;
+    document.getElementById('chatBadge').innerText='• '+current.desc;
+    document.body.style.background='#0b0b12';
+    renderChat();
+  },1500);
 }
 function renderChat(){
-  let h=histories[current];
-  document.getElementById('chat').innerHTML=h.map(x=>`<div class="msg ${x.role==='user'?'user':''}">${x.text}</div>`).join('')||`<div class="msg">Welcome to <b>${MODES.find(m=>m.id===current).name}</b> — This is a separate page. Ask anything in this mode.</div>`;
+  let h=histories[current.id];
+  document.getElementById('chat').innerHTML=h.map(x=>`<div class="msg ${x.role==='user'?'user':''}">${x.text}</div>`).join('')||`<div class="msg">Welcome to <b>${current.name}</b> — This is your own dashboard for ${current.desc}. Ask anything here.<br><br>Try: <i>Give me a plan</i></div>`;
   window.scrollTo(0,document.body.scrollHeight);
 }
-function saveKey(){
-  let v=document.getElementById('apiKey').value.trim();
-  if(!v.startsWith('AQ.')){alert('Paste valid AQ. key');return}
-  apiKey=v; localStorage.setItem('solo_api_key',v);
-  document.getElementById('keyBox').classList.add('hidden');
-  document.getElementById('status').innerText='● Connected - Key Saved Forever';
-  if(!introduced){introduced=true; histories[current].push({role:'ai',text:'Welcome Founder. I am Solo AI 4.1, created by Iyanda Solomon Ayobami. Your key is locked. I will not repeat this intro again. What shall we build today?'}); renderChat();}
-}
+function saveKey(){let v=document.getElementById('apiKey').value.trim();if(!v.startsWith('AQ.')){alert('Paste valid AQ. key');return}apiKey=v;localStorage.setItem('solo_api_key',v);document.getElementById('keyBox').classList.add('hidden');document.getElementById('status').innerText='● Connected - Key Saved Forever';}
 async function ask(){
-  let inp=document.getElementById('userInput'); let q=inp.value.trim(); if(!q) return;
+  let inp=document.getElementById('userInput');let q=inp.value.trim();if(!q)return;
   if(!apiKey){alert('Paste key first');return}
-  histories[current].push({role:'user',text:q}); inp.value=''; renderChat();
-  histories[current].push({role:'ai',text:'Thinking...'}); renderChat();
-  let mode=MODES.find(m=>m.id===current);
+  histories[current.id].push({role:'user',text:q});inp.value='';inp.style.height='44px';renderChat();
+  histories[current.id].push({role:'ai',text:'Thinking... 🌀'});renderChat();
   let models=['gemini-3.5-flash-lite','gemini-2.5-flash-lite','gemini-2.0-flash','gemini-2.5-flash'];
   let done=false;
   for(let model of models){
     try{
-      let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:mode.prompt+'\nUser: '+q}]}],generationConfig:{temperature:0.7}})});
-      let d=await r.json();
-      let ans=d.candidates?.[0]?.content?.parts?.[0]?.text;
-      if(ans){histories[current][histories[current].length-1]={role:'ai',text:ans}; done=true; break;}
+      let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:FOUNDER+'\n'+current.prompt+'\nUser: '+q}]}],generationConfig:{temperature:0.7}})});
+      let d=await r.json();let ans=d.candidates?.[0]?.content?.parts?.[0]?.text;
+      if(ans){lastAnswer=ans;histories[current.id][histories[current.id].length-1]={role:'ai',text:ans};done=true;break;}
     }catch(e){}
   }
-  if(!done) histories[current][histories[current].length-1]={role:'ai',text:'Network busy, please try again.'};
+  if(!done)histories[current.id][histories[current.id].length-1]={role:'ai',text:'Network busy, try again.'};
   renderChat();
 }
-document.getElementById('userInput').addEventListener('keydown',e=>{if(e.key==='Enter')ask()});
-if(apiKey){
-  document.getElementById('keyBox').classList.add('hidden');
-  document.getElementById('status').innerText='● Connected - Key Saved Forever';
-  histories[current].push({role:'ai',text:'Welcome back Founder. Key is saved. No need to paste again.'});
+// Auto-grow textarea
+document.getElementById('userInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,140)+'px'});
+document.getElementById('userInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask()}});
+// Voice - Speech to Text
+function startVoice(){
+  let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Voice not supported on this browser, use Chrome');return}
+  let rec=new SR();rec.lang='en-NG';rec.start();
+  document.getElementById('micBtn').innerText='🔴';
+  rec.onresult=e=>{document.getElementById('userInput').value=e.results[0][0].transcript;document.getElementById('micBtn').innerText='🎤';ask()};
+  rec.onerror=()=>{document.getElementById('micBtn').innerText='🎤'};
 }
-renderModes(); switchMode('super');
+// Voice - Text to Speech
+function speakLast(){if(!lastAnswer){alert('Ask something first');return}let u=new SpeechSynthesisUtterance(lastAnswer);u.lang='en-NG';speechSynthesis.speak(u)}
+// Translate
+function toggleTranslate(){let b=document.getElementById('transBox');b.style.display=b.style.display==='block'?'none':'block'}
+async function doTranslate(){
+  let lang=document.getElementById('lang').value;
+  if(!lastAnswer){alert('Ask something first');return}
+  document.getElementById('transResult').innerText='Translating...';
+  try{
+    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Translate this to '+lang+':\n'+lastAnswer}]})});
+    let d=await r.json();document.getElementById('transResult').innerText=d.candidates?.[0]?.content?.parts?.[0]?.text||'Failed';
+  }catch(e){document.getElementById('transResult').innerText='Failed'}
+}
+if(apiKey){document.getElementById('keyBox').classList.add('hidden');document.getElementById('status').innerText='● Connected - Key Saved Forever'}
+renderHome();
 </script></body></html>
