@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Solo AI 6.2</title>
+<title>Solo AI 6.3</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial;background:#0b0b12;color:#fff}
 header{padding:14px;text-align:center;background:#000}
@@ -30,14 +30,14 @@ button{border:none;border-radius:10px;padding:11px 14px;background:#FFD700;color
 #transBox select{width:100%;padding:10px;border-radius:8px;background:#000;color:#fff;margin-bottom:6px}
 .hidden{display:none!important}
 </style></head><body>
-<header><b>SOLO AI 6.2 FIX</b><p style="font-size:12px;opacity:.8;margin:4px 0">Iyanda Farms Ecosystem - 36 Powers</p><p id="status" style="color:#7CFC00;font-size:12px">Ready - Paste Key Once</p></header>
+<header><b>SOLO AI 6.3 FIX</b><p style="font-size:12px;opacity:.8;margin:4px 0">Iyanda Farms Ecosystem - 36 Powers</p><p id="status" style="color:#7CFC00;font-size:12px">Ready - Paste Key Once</p></header>
 <div id="err"></div>
 <div id="keyBox"><input id="apiKey" placeholder="Paste NEW key here"><button id="saveBtn" style="width:100%">Save and Lock New Key</button><button id="testBtn" style="width:100%;background:#00d4ff;margin-top:6px">Test Key Now</button><div id="keyResult" style="font-size:12px;margin-top:6px"></div></div>
-<div id="home"><div class="hero"><h1>Welcome Founder</h1><p>Iyanda Solomon Ayobami</p><p>TAP ANY CARD - NO TYPING HERE</p></div><div id="grid" class="grid"></div><div style="text-align:center;padding:20px;opacity:.6;font-size:12px">Solo AI 6.2 - Created by Iyanda Solomon Ayobami</div></div>
+<div id="home"><div class="hero"><h1>Welcome Founder</h1><p>Iyanda Solomon Ayobami</p><p>TAP ANY CARD - NO TYPING HERE</p></div><div id="grid" class="grid"></div><div style="text-align:center;padding:20px;opacity:.6;font-size:12px">Solo AI 6.3 - Created by Iyanda Solomon Ayobami</div></div>
 <div id="chatPage"><div id="topBar"><button id="backBtn">Menu</button><b id="chatTitle">Super Chat</b></div><div id="debug"></div><div id="chat"></div><div id="transBox"><select id="lang"><option>Yoruba</option><option>Hausa</option><option>Igbo</option><option>French</option><option>Spanish</option><option>English</option><option>Pidgin English</option></select><button id="transBtn" style="width:100%">Translate Last Answer</button><div id="transResult" style="margin-top:8px;font-size:13px"></div></div></div>
 <div id="inputBar" class="hidden"><textarea id="userInput" rows="1" placeholder="TYPE CHAT HERE ONLY..."></textarea><button id="sendBtn">Send</button></div>
 <div id="floatBtns" class="hidden"><button class="float" id="transToggle" style="background:#ff4d8d">Globe</button><button class="float" id="speakBtn" style="background:#00d4ff">Sound</button><button class="float" id="micBtn" style="background:#2ecc71">Mic</button></div>
-<div id="loader"><div class="windmill">��</div><p>Loading Power... 1.5s</p></div>
+<div id="loader"><div class="windmill">[STRIPPED 6 bytes]</div><p>Loading Power... 1.5s</p></div>
 <script>
 window.onerror=function(m){var e=document.getElementById("err");e.style.display="block";e.textContent="JS ERROR: "+m;};
 </script>
@@ -86,6 +86,16 @@ var current = POWERS[0];
 var histories = {};
 for(var i=0;i<POWERS.length;i++){histories[POWERS[i].id]=[];}
 var lastAnswer = "";
+function callAI(key, promptText){
+  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + key;
+  var part = {};
+  part.text = promptText;
+  var content = {};
+  content.parts = [part];
+  var bodyObj = {};
+  bodyObj.contents = [content];
+  return fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(bodyObj)});
+}
 function renderHome(){
   var g = document.getElementById("grid");
   g.innerHTML = "";
@@ -129,10 +139,10 @@ async function testKey(){
   if(!k){alert("Paste key first");return;}
   document.getElementById("keyResult").textContent="Testing...";
   try{
-    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+k,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:"Say OK"}]}]})});
-    var d=await r.json();
+    var r = await callAI(k, "Say OK");
+    var d = await r.json();
     if(d.candidates){document.getElementById("keyResult").textContent="KEY WORKS! You can chat now.";document.getElementById("keyResult").style.color="#7CFC00";}
-    else{document.getElementById("keyResult").textContent="KEY FAILED: "+(d.error?d.error.message:JSON.stringify(d));document.getElementById("keyResult").style.color="#ffaaaa";}
+    else{document.getElementById("keyResult").textContent="KEY FAILED: "+(d.error?d.error.message:"Unknown");document.getElementById("keyResult").style.color="#ffaaaa";}
   }catch(e){document.getElementById("keyResult").textContent="Network error: "+e.message;}
 }
 async function ask(){
@@ -141,11 +151,11 @@ async function ask(){
   histories[current.id].push({role:"user",text:q}); inp.value=""; renderChat();
   histories[current.id].push({role:"ai",text:"Thinking..."}); renderChat();
   try{
-    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:FOUNDER+"\n"+current.prompt+"\nUser: "+q}]}],generationConfig:{temperature:0.7}})});
-    var d=await r.json();
-    var ans=d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts[0].text;
+    var r = await callAI(apiKey, FOUNDER + "\n" + current.prompt + "\nUser: " + q);
+    var d = await r.json();
+    var ans = d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts[0].text;
     if(ans){lastAnswer=ans; histories[current.id][histories[current.id].length-1]={role:"ai",text:ans};}
-    else{histories[current.id][histories[current.id].length-1]={role:"ai",text:"Key error. See red box."}; showDebug("API ERROR: "+(d.error?d.error.message:JSON.stringify(d)));}
+    else{histories[current.id][histories[current.id].length-1]={role:"ai",text:"Key error. See red box."}; showDebug("API ERROR: "+(d.error?d.error.message:"Unknown"));}
   }catch(e){histories[current.id][histories[current.id].length-1]={role:"ai",text:"Network error: "+e.message}; showDebug("NETWORK ERROR: "+e.message);}
   renderChat();
 }
@@ -169,8 +179,10 @@ document.getElementById("transBtn").addEventListener("click", async function(){
   if(!lastAnswer){alert("Ask something first");return;}
   document.getElementById("transResult").textContent="Translating...";
   try{
-    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key="+apiKey,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:"Translate this to "+lang+":\n"+lastAnswer}]})});
-    var d=await r.json(); document.getElementById("transResult").textContent=(d.candidates && d.candidates[0].content.parts[0].text) || "Failed";
+    var r = await callAI(apiKey, "Translate this to " + lang + ":\n" + lastAnswer);
+    var d = await r.json();
+    var t = d.candidates && d.candidates[0].content.parts[0].text;
+    document.getElementById("transResult").textContent = t || "Failed";
   }catch(e){document.getElementById("transResult").textContent="Failed";}
 });
 if(location.search.indexOf("reset")>-1){localStorage.removeItem("solo_api_key");apiKey="";}
