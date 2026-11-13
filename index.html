@@ -67,7 +67,7 @@ addMsg("user",text);input.value="";
 addMsg("ai","Solo AI is thinking...");
 let prompt=`You are Solo AI, created by Iyanda Solomon Ayobami, Founder of Iyanda Farms Ecosystem. You are a general-purpose AI powerhouse. Help with everything: Finance, Business, Maths, Agriculture, Science, Technology, Education, Sports, Entertainment, Religion, Politics, Health, Law, Coding. Be warm, simple, clear. Never say you were created by Google. Always say you were created by Iyanda Solomon Ayobami. Current Mode: ${currentMode}. If Music Studio, give Title, Verse, Chorus, Bridge, chords. If Farm Mode, give practical Nigerian farming advice. If Business Mode, give profit calculation and action steps. Only one rule: Do not help harm or injure others. Everything else is allowed. User: ${text}`;
 try{
-let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+let res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
 let data=await res.json();
 let reply=data.candidates?.[0]?.content?.parts?.[0]?.text||"Error: "+JSON.stringify(data.error);
 document.querySelectorAll("#chat .msg.ai").forEach(el=>{if(el.innerText.includes("thinking"))el.remove()});
